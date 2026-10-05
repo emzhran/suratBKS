@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Verifikasi Surat</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 12px rgba(0,0,0,.1);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.valid{
+    color:green;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.row{
+    margin-bottom:10px;
+}
+
+.label{
+    font-weight:bold;
+}
+
+.loading{
+    text-align:center;
+}
+
+.error{
+    color:red;
+    text-align:center;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h2>SISTEM KEARSIPAN TERINTEGRASI</h2>
+    </div>
+
+    <div id="content" class="loading">
+        Memuat data...
+    </div>
+
+</div>
+
+<script>
+
+const id =
+new URLSearchParams(window.location.search).get("id");
+
+if(!id){
+
+document.getElementById("content").innerHTML =
+'<div class="error">ID surat tidak ditemukan.</div>';
+
+}else{
+
+fetch(`data/${id}.json`)
+.then(response => {
+
+if(!response.ok){
+throw new Error("Data tidak ditemukan");
+}
+
+return response.json();
+
+})
+.then(data => {
+
+document.getElementById("content").innerHTML = `
+
+<div class="valid">
+✅ SURAT TERVERIFIKASI
+</div>
+
+<hr>
+
+<div class="row">
+<span class="label">Nomor Pengajuan :</span>
+${data.nomorPengajuan}
+</div>
+
+<div class="row">
+<span class="label">Nomor Surat :</span>
+${data.nomorSurat}
+</div>
+
+<div class="row">
+<span class="label">Nama :</span>
+${data.nama}
+</div>
+
+<div class="row">
+<span class="label">Jabatan :</span>
+${data.jabatan}
+</div>
+
+<div class="row">
+<span class="label">Unit Kerja :</span>
+${data.unitKerja}
+</div>
+
+<div class="row">
+<span class="label">Instansi :</span>
+${data.instansi}
+</div>
+
+<div class="row">
+<span class="label">Tanggal Persetujuan :</span>
+${data.tanggal}
+</div>
+
+<div class="row">
+<span class="label">Status :</span>
+${data.status}
+</div>
+
+`;
+
+})
+.catch(error => {
+
+document.getElementById("content").innerHTML =
+'<div class="error">Data surat tidak ditemukan.</div>';
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
